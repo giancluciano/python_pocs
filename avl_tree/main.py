@@ -57,6 +57,33 @@ class Node:
         self.update_height()
         return self._rebalance()
 
+    def _min_node(self):
+        current = self
+        while current.left:
+            current = current.left
+        return current
+
+    def delete(self, data):
+        if data < self.data:
+            if self.left:
+                self.left = self.left.delete(data)
+        elif data > self.data:
+            if self.right:
+                self.right = self.right.delete(data)
+        else:
+            # Node to delete found
+            if not self.left:
+                return self.right
+            if not self.right:
+                return self.left
+            # Two children: replace with inorder successor (min of right subtree)
+            successor = self.right._min_node()
+            self.data = successor.data
+            self.right = self.right.delete(successor.data)
+
+        self.update_height()
+        return self._rebalance()
+
     def _rebalance(self):
         balance = Node.get_balance(self)
 
@@ -97,3 +124,8 @@ if __name__ == "__main__":
     print("Inorder traversal:", list(inorder(root)))
     print("Root:", root.data)
     print("Tree height:", root.height)
+
+    root = root.delete(30)
+    print("\nAfter deleting 30:")
+    print("Inorder traversal:", list(inorder(root)))
+    print("Root:", root.data)
