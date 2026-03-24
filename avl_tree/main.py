@@ -79,3 +79,21 @@ class Node:
             return self.rotate_left()
 
         return self
+
+
+def inorder(node):
+    if node:
+        yield from inorder(node.left)
+        yield node.data
+        yield from inorder(node.right)
+
+
+if __name__ == "__main__":
+    values = [10, 20, 30, 40, 50, 25]
+    root = Node(values[0])
+    for v in values[1:]:
+        root = root.insert(v)
+
+    print("Inorder traversal:", list(inorder(root)))
+    print("Root:", root.data)
+    print("Tree height:", root.height)
