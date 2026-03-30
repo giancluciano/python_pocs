@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grocery List</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Grocery List</h1>
+    </header>
+
+    <form id="add-form" class="add-form">
+      <input
+        type="text"
+        id="item-name"
+        placeholder="Item name"
+        required
+        autocomplete="off"
+      />
+      <input
+        type="text"
+        id="item-qty"
+        placeholder="Quantity (optional)"
+        autocomplete="off"
+      />
+      <button type="submit">Add</button>
+    </form>
+
+    <div id="error-banner" class="error-banner hidden"></div>
+
+    <ul id="item-list" class="item-list"></ul>
+
+    <p id="empty-msg" class="empty-msg hidden">No items yet. Add something above!</p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
