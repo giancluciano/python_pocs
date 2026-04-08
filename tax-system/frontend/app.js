@@ -1,10 +1,19 @@
-function calculateTaxes(product) {
+function getSelectedState() {
+  return document.getElementById("state-select").value;
+}
+
+function getSelectedYear() {
+  return parseInt(document.getElementById("year-select").value, 10);
+}
+
+function calculateTaxes(product, stateCode, year) {
+  const rates = TAX_RATES_BY_STATE_YEAR[stateCode][year];
   return product.taxes.map(function (taxKey) {
-    const tax = TAXES[taxKey];
+    const rate = rates[taxKey];
     return {
-      name: tax.name,
-      rate: tax.rate,
-      amount: product.basePrice * tax.rate,
+      name: TAX_NAMES[taxKey],
+      rate: rate,
+      amount: product.basePrice * rate,
     };
   });
 }
@@ -14,16 +23,18 @@ function formatCurrency(value) {
 }
 
 function renderProducts() {
-  const tbody = document.getElementById("product-list");
+  var stateCode = getSelectedState();
+  var year = getSelectedYear();
+  var tbody = document.getElementById("product-list");
 
-  const rows = PRODUCTS.map(function (product) {
-    const taxes = calculateTaxes(product);
-    const totalTax = taxes.reduce(function (sum, t) { return sum + t.amount; }, 0);
-    const total = product.basePrice + totalTax;
+  var rows = PRODUCTS.map(function (product) {
+    var taxes = calculateTaxes(product, stateCode, year);
+    var totalTax = taxes.reduce(function (sum, t) { return sum + t.amount; }, 0);
+    var total = product.basePrice + totalTax;
 
-    const taxItems = taxes
+    var taxItems = taxes
       .map(function (t) {
-        return '<li><span class="tax-name">' + t.name + " (" + (t.rate * 100) + '%)</span>' +
+        return '<li><span class="tax-name">' + t.name + " (" + (t.rate * 100).toFixed(2) + '%)</span>' +
           '<span class="tax-amount">+' + formatCurrency(t.amount) + "</span></li>";
       })
       .join("");
@@ -42,4 +53,26 @@ function renderProducts() {
   tbody.innerHTML = rows;
 }
 
+function populateSelectors() {
+  var stateSelect = document.getElementById("state-select");
+  STATES.forEach(function (state) {
+    var option = document.createElement("option");
+    option.value = state.code;
+    option.textContent = state.name;
+    stateSelect.appendChild(option);
+  });
+
+  var yearSelect = document.getElementById("year-select");
+  YEARS.forEach(function (year) {
+    var option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+  });
+
+  stateSelect.addEventListener("change", renderProducts);
+  yearSelect.addEventListener("change", renderProducts);
+}
+
+populateSelectors();
 renderProducts();
