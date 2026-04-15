@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ./backend
+    expose:
+      - "5000"
+    volumes:
+      - db-data:/app
+    networks:
+      - app-net
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - app-net
+    restart: unless-stopped
+
+volumes:
+  db-data:
+
+networks:
+  app-net:
