@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'producer',
+    'django_tasks_db',
 ]
 
 MIDDLEWARE = [
@@ -117,4 +118,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-TASKS = {"default": {"BACKEND": "django.tasks.backends.immediate.ImmediateBackend"}}
+TASKS = {
+    "default": {
+        "BACKEND": "django_tasks_db.DatabaseBackend",
+        "QUEUES": ["default"]
+    }
+}
